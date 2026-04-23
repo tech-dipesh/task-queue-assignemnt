@@ -1,0 +1,52 @@
+services:
+
+  mongo:
+    image: mongo:6
+    container_name: mongo
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo_data:/data/db
+
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - '6379:6379'
+
+  server:
+    build:
+      context: ../server
+      dockerfile: Dockerfile
+    container_name: server
+    ports:
+      - '5000:5000'
+    env_file:
+      - ../.env
+    depends_on:
+      - mongo
+      - redis
+
+  worker:
+    build:
+      context: ../worker
+      dockerfile: Dockerfile
+    container_name: worker
+    env_file:
+      - ../.env
+    depends_on:
+      - mongo
+      - redis
+
+  client:
+    build:
+      context: ../client
+      dockerfile: Dockerfile
+    container_name: client
+    ports:
+      - '3000:80'
+    depends_on:
+      - server
+
+volumes:
+  mongo_data:

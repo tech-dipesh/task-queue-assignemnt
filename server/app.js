@@ -3,7 +3,7 @@ import { connect, Schema, model } from 'mongoose'
 import jwt from 'jsonwebtoken'
 import cors from 'cors'
 import "dotenv/config"
-import taskRoutes from './tasks'
+import taskRoutes from './tasks.js'
 
 
 const app = express()
